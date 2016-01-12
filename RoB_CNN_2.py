@@ -153,7 +153,7 @@ def pad_sequences(sequences, maxlen=None, dtype='int32', padding='pre', truncati
     return x
 
 # @TMP limiting to 2000 words!
-def RoB_CNN_theano(maxlen=2000):
+def RoB_CNN_theano(maxlen=4000):
     '''
     Process data for CNN classification via the 
     theano implementation (Kim, 2014)
@@ -184,10 +184,10 @@ def RoB_CNN_theano(maxlen=2000):
     # zero-pad sentences
     ## @TMP only one set of filters
     #filter_heights = [3,4,5]
-    filter_heights = [3,4,5]
+    filter_heights = [9,10,11]
     pad_len = maxlen + 2*(max(filter_heights)-1)
-    X_train = pad_sequences(X_train, maxlen=maxlen, padding="post", dtype=np.int32)
-    X_test  = pad_sequences(X_test, maxlen=maxlen, padding="post", dtype=np.int32)
+    X_train = pad_sequences(X_train, maxlen=pad_len, padding="post", dtype=np.int32)
+    X_test  = pad_sequences(X_test, maxlen=pad_len, padding="post", dtype=np.int32)
     print('X_train shape: ', X_train.shape)
 
     ''' 
@@ -199,8 +199,8 @@ def RoB_CNN_theano(maxlen=2000):
     datasets = [X_y_train, X_y_test]
 
     # @TMP setting these to small values 
-    n_filters  = 10 # number of feature maps per height
-    batch_size = 20 
+    n_filters  = 100 # number of feature maps per height
+    batch_size = 25 
     n_epochs   = 10 
     perf = conv_net_sentence.train_conv_net(datasets,
                       W,
@@ -214,7 +214,7 @@ def RoB_CNN_theano(maxlen=2000):
                       sqr_norm_lim=9,
                       non_static=True,
                       batch_size=batch_size, 
-                      dropout_rate=[0.5])
+                      dropout_rate=[0.25])
     
     return perf 
 
